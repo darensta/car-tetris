@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Car Tetris – POC</title>
+<style>
+body { background:#0b0f14; color:#fff; font-family:system-ui; margin:0; display:flex; }
+#lot { display:grid; grid-template-columns: repeat(10, 40px); grid-auto-rows: 40px; gap:2px; margin:20px; background:#1b2633; padding:10px; }
+.cell { width:40px; height:40px; background:#0f1822; }
+.car { position:absolute; background:#2c78ff; border-radius:6px; display:flex; align-items:center; justify-content:center; cursor:grab; user-select:none; }
+#tray { margin:20px; }
+button { padding:10px 14px; border-radius:8px; border:0; background:#2c78ff; color:#fff; font-weight:600; }
+</style>
+</head>
+<body>
+
+<div id="tray">
+  <button onclick="spawnCar()">New Car</button>
+</div>
+<div id="lot"></div>
+
+<script>
+const lot = document.getElementById("lot");
+for(let i=0;i<50;i++) lot.appendChild(document.createElement("div")).className="cell";
+
+const cars = [
+ {name:"Corolla", w:2, h:4},
+ {name:"Camry", w:2, h:5},
+ {name:"F-150", w:3, h:6},
+ {name:"Miata", w:2, h:3},
+ {name:"Smart", w:1, h:2}
+];
+
+function spawnCar(){
+ const c = cars[Math.floor(Math.random()*cars.length)];
+ const el = document.createElement("div");
+ el.className="car";
+ el.textContent = c.name;
+ el.style.width = (c.w*42)+"px";
+ el.style.height = (c.h*42)+"px";
+ el.style.left="20px";
+ el.style.top="120px";
+ document.body.appendChild(el);
+
+ let ox,oy;
+ el.onpointerdown=e=>{
+  ox=e.offsetX; oy=e.offsetY;
+  document.onpointermove=ev=>{
+    el.style.left=(ev.clientX-ox)+"px";
+    el.style.top=(ev.clientY-oy)+"px";
+  }
+  document.onpointerup=()=>document.onpointermove=null;
+ }
+}
+</script>
+</body>
+</html>
